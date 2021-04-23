@@ -30,4 +30,5 @@ public class Card {
         return "Card [symbol=" + symbol + ", value=" + value + "]";
     }
     //comment 2
+    //comment 1
 }
