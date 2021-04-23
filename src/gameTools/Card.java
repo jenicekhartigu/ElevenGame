@@ -34,10 +34,8 @@ public class Card {
     public int getPoints(){
         return points;
     }
-
     @Override
-    public String toStr
-@Override
     public String toString() {
         return "Card [symbol=" + symbol + ", value=" + value + "]";
     }
+}
