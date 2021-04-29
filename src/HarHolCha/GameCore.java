@@ -1,39 +1,78 @@
 package HarHolCha;
 
 import java.util.List;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
-import elevengame.GameInterface;
+import jdk.javadoc.internal.doclets.formats.html.markup.Table;
 
-public class GameCore implements GameInterface {
+public class GameCore implements GameInterface{
 
-    @Override
-    public String getName() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+    //stul s kartami
+    List<Card> stul = new ArrayList<>();
 
-    @Override
-    public int nCards() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+    //balicek s kartami
+    List<Card> balicek = new ArrayList<>();
 
-    @Override
-    public int getDeckSize() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
+    public GameCore(){
+        String[] symbol = DataStore.loadSymbols();
+        String[] values = DataStore.loadValues();
+        int[] points = DataStore.loadNPoints();
 
-    @Override
-    public String getCardDescriptionAt(int index) {
-        // TODO Auto-generated method stub
-        return null;
+        //pro kazdy symbol vygeneruje kartu jednoho cisla a ulozit je do listu balicek
+        for (String string : symbol) {
+            for (int i = 0; i < 13; i++) {
+                Card card = new Card(values[i], string, points[i]);
+                balicek.add(card);
+            }
+        }
+        //zamichat balicek
+        Collections.shuffle(balicek);
+
+        //vyndat karty na stul - pridat karty do listu stul a odebrat z baliku
+        for (int i = 0; i < nCards() - 1; i++) {
+            stul.add(balicek.remove(i));
+        }
     }
 
     @Override
     public boolean anotherPlayIsPossible() {
-        // TODO Auto-generated method stub
+        if (stul.size() > 1){
+            int trojce = 0;
+            double sum = 0;
+            int n = stul.size();
+            for (int i = 0; i < n; i++) {
+                if (stul.get(i).getPoints() == 0){
+                    trojce++;
+                } else {
+                    sum = sum + stul.get(i).getPoints();
+                }
+            }
+
+        }
         return false;
+    }
+
+    @Override
+    public String getCardDescriptionAt(int index) {
+        return stul.get(index).toString();
+    }
+
+    @Override
+    public int getDeckSize() {
+        return balicek.size();
+    }
+
+    @Override
+    public String getName() {
+        return "Eleven Game";
+    }
+
+    @Override
+    public int nCards() {
+        return DataStore.getNCards();
     }
 
     @Override
@@ -44,8 +83,13 @@ public class GameCore implements GameInterface {
 
     @Override
     public boolean isWon() {
-        // TODO Auto-generated method stub
-        return false;
+        return stul.isEmpty() && balicek.isEmpty();
+    }
+
+    //generator nahodnych cisel
+    private int Random(int a){
+        Random rand = new Random();
+        return rand.nextInt(a);
     }
     
 }
